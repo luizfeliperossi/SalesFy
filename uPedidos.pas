@@ -241,7 +241,6 @@ procedure TFrm_Pedidos.inserirItemListBox(id_produto,estoque : integer; nome_pro
 var item : TListBoxItem;
     form : TFrmListaProdutos;
 begin
-
   item := TListBoxItem.Create(ListBox1);
   item.Height := 68;
   item.Tag := id_produto;
@@ -253,7 +252,6 @@ begin
   form.lblValor.Text := FloatToStr(valor);
   item.AddObject(form);
   ListBox1.AddObject(item);
-
 end;
 
 procedure TFrm_Pedidos.consultarProdutosBanco();
@@ -311,13 +309,9 @@ begin
   i := 0;
   while i < Length(vProdutosPedido) do
   begin
-      //FDQuery1.Params.Clear;
-
       atualizaEstoque(vProdutosPedido[i].codigo,vProdutosPedido[i].qtde);
 
       codigoItem := geraCodigoItemPedido;
-
-      //FDQuery1.Close;
       FDQuery1.SQL.Clear;
       FDQuery1.SQL.Add('insert into pedidos_prod (id, id_produto, valor_unit, qtde, valor_total, id_pedido)');
       FDQuery1.SQL.Add('values (:id, :id_produto, :valor_unit, :qtde, :valor_total, :id_pedido)');
@@ -431,20 +425,6 @@ begin
       end;
 
       frmInfoPedido.Show;
-
-    {edt_ID_edicao.Text := '';
-    edt_descricao_edicao.Text := '';
-    edt_estoque_edicao.Text := '';
-    edt_valor_edicao.Text := '';
-
-    id_produto := StrToInt(TListItemText(ListView1.Items[ItemIndex].Objects.FindDrawable('txtID')).Text);
-    vProduto := buscarProdutonoBanco(id_produto);
-    edt_ID_edicao.Text := IntToStr(vProduto.id);
-    edt_descricao_edicao.Text := vProduto.descricao;
-    edt_estoque_edicao.Text := IntToStr(vProduto.estoque);
-    edt_valor_edicao.Text := FloatToStr(vProduto.valor);
-    TabControl1.TabIndex := 2;}
-    //estoque(StrToInt(TListItemText(ListView1.Items[ItemIndex].Objects.FindDrawable('txtID')).Text)).ToString;
   end;
 end;
 

@@ -108,13 +108,16 @@ implementation
 
 uses uClientes, uPedidos;
 
+// Atualiza a lista de Fornecedores
 procedure Tfrm_fornecedores.atualizaFornecedorBanco;
 var vFornecedor : TFornecedor;
 begin
+  // SQL para consulta de Fornecedores
   FDQFornecedor.Close;
   FDQFornecedor.SQL.Clear;
   FDQFornecedor.SQL.Add('SELECT * FROM FORNECEDORES');
 
+  // Busca no BD
   if edtPesquisa.Text <> '' then
   begin
     FDQFornecedor.SQL.Add('WHERE NOME LIKE :PESQUISA');
@@ -127,21 +130,24 @@ begin
 
   while not FDQFornecedor.Eof do
   begin
+    // Preenche os campos do Fornecedor
     vFornecedor.id := FDQFornecedor.FieldByName('id').AsInteger;
     vFornecedor.nome := FDQFornecedor.FieldByName('nome').AsString;
 
+    // Chama a função de Add Fornecedor na ListView
     insereFornecedorLista(vFornecedor);
     FDQFornecedor.Next;
   end;
 end;
 
+// Insere um Fornecedor na ListView
 procedure Tfrm_fornecedores.insereFornecedorLista(fornecedor: TFornecedor);
 begin
   with ListView1.Items.Add do
   begin
+    // Define as informações na ListView
     TListItemText(Objects.FindDrawable('txtID')).Text := IntToStr(fornecedor.id);
     TListItemText(Objects.FindDrawable('txtNome')).Text := fornecedor.nome;
-
     TListItemImage(Objects.FindDrawable('imgEditar')).Bitmap := Image1.Bitmap;
   end;
 end;
@@ -156,26 +162,33 @@ begin
   TabControl1.TabIndex := 0;
 end;
 
+// Exclui Fornecedor via ID
 procedure Tfrm_fornecedores.deletaFornecedor(id_fornecedor: Integer);
 begin
   FDQFornecedor.Close;
   FDQFornecedor.SQL.Clear;
+  // SQL de exclusão via ID
   FDQFornecedor.SQL.Add('DELETE FROM FORNECEDORES');
   FDQFornecedor.SQL.Add('WHERE ID = :id');
 
+  // Parametro definido pelo ID
   FDQFornecedor.ParamByName('id').AsInteger := id_fornecedor;
 
   FDQFornecedor.ExecSQL;
 end;
 
+// Edição de Fornecedor no BD
 procedure Tfrm_fornecedores.editaFornecedorNoBanco(fornecedor: TFornecedor);
 begin
   FDQFornecedor.Close;
   FDQFornecedor.SQL.Clear;
+
+  // SQL de Att via ID
   FDQFornecedor.SQL.Add('UPDATE FORNECEDORES SET ');
   FDQFornecedor.SQL.Add('   nome = :nome ');
   FDQFornecedor.SQL.Add('WHERE ID = :ID');
 
+  // Definiãção dos Parametros atualizados
   FDQFornecedor.ParamByName('id').AsInteger := fornecedor.id;
   FDQFornecedor.ParamByName('nome').AsString := fornecedor.nome;
 
@@ -192,17 +205,20 @@ begin
     result := FDQFornecedor.FieldByName('estoque').AsInteger;
 end;
 
+// Busca de Fornecedores via ID
 function Tfrm_fornecedores.buscarFornecedorBanco(id_fornecedor: integer): TFornecedor;
 var vFornecedor: TFornecedor;
 begin
   FDQFornecedor.Close;
   FDQFornecedor.SQL.Clear;
+  // SQL de consulta
   FDQFornecedor.SQL.Add('SELECT * FROM FORNECEDORES ');
   FDQFornecedor.SQL.Add('WHERE ID = :ID');
   FDQFornecedor.ParamByName('id').AsInteger := id_fornecedor;
 
   FDQFornecedor.Open();
 
+  // Preenche as informações
   vFornecedor.id := id_fornecedor;
   vFornecedor.nome := FDQFornecedor.FieldByName('nome').AsString;
   Result := vFornecedor;
@@ -239,10 +255,12 @@ begin
   atualizaFornecedorBanco;
 end;
 
+// Add Fornecedor no BD
 procedure Tfrm_fornecedores.inserirFornecedorNoBanco(fornecedor: TFornecedor);
 begin
   FDQFornecedor.Close;
   FDQFornecedor.SQL.Clear;
+  // Consulta SQL para Add
   FDQFornecedor.SQL.Add('INSERT INTO FORNECEDORES (ID, NOME)');
   FDQFornecedor.SQL.Add(' VALUES (:ID, :NOME)');
   FDQFornecedor.ParamByName('id').AsInteger := fornecedor.id;
@@ -250,6 +268,7 @@ begin
   FDQFornecedor.ExecSQL;
 end;
 
+// Evento de Click na ListView
 procedure Tfrm_fornecedores.ListView1ItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
@@ -265,48 +284,68 @@ begin
     edt_ID_edicao.Text := '';
     edtNome.Text:='';
 
+    // Pega o ID do Fornecedor
     id_fornecedor := StrToInt(TListItemText(ListView1.Items[ItemIndex].Objects.FindDrawable('txtID')).Text);
+
+    // Busca no BD pelo id
     vFornecedor := buscarFornecedorBanco(id_fornecedor);
+
+    // Preenche os campos com os dados
     edt_ID_edicao.Text := IntToStr(vFornecedor.id);
     edtNome.Text := vFornecedor.nome;
 
+    // Abre aba de edição
     TabControl1.TabIndex := 2;
   end;
 end;
 
-
+// Botão de deletar Fornecedor
 procedure Tfrm_fornecedores.rt_deletarClick(Sender: TObject);
 var id_fornecedor: integer;
 begin
+  // Coleta o ID
   id_fornecedor := StrToInt(edt_ID_edicao.Text);
+
+  // Chama função de remoção
   deletaFornecedor(id_fornecedor);
   ShowMessage('Produto deletado!');
   TabControl1.TabIndex := 0;
+
+  // Atualiza a ListView
   atualizaFornecedorBanco
 end;
 
+// Botão Add
 procedure Tfrm_fornecedores.rt_gravarClick(Sender: TObject);
 var vFornecedor: TFornecedor;
 begin
+  // Campos são preenchidos com os dados
   vFornecedor.id := StrToInt(edt_ID.Text);
   vFornecedor.nome := edt_nome.Text;
 
+  // Add ListView
   insereFornecedorLista(vFornecedor);
+
+  // Add BD
   inserirFornecedorNoBanco(vFornecedor);
   ShowMessage('Produto adicionado!');
 end;
 
+// Botão Edição
 procedure Tfrm_fornecedores.rt_salvarClick(Sender: TObject);
 var vFornecedor : TFornecedor;
 begin
+  // Campos preenchidos
   vFornecedor.id := StrToInt(edt_ID_edicao.Text);
   vFornecedor.nome := edtNome.Text;
 
+  // Função de ediar no BD
   editaFornecedorNoBanco(vFornecedor);
+  // Função de Att fornecedor no BD
+  atualizaFornecedorBanco;
   ShowMessage('Produto alterado');
 
   TabControl1.TabIndex := 0;
-  atualizaFornecedorBanco;
 end;
 
 end.

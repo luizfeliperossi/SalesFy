@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2024/03/12 19:39:45.000.900,=C:\Users\Matheus\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024/03/12 19:42:32.000.090,C:\Users\Matheus\Documents\Embarcadero\Studio\Projects\Univel_Aplicativo\uPrincipal.fmx=C:\Users\Matheus\Documents\Embarcadero\Studio\Projects\Unit2.fmx</Transaction>
+    <Transaction>2024/03/12 19:42:32.000.090,C:\Users\Matheus\Documents\Embarcadero\Studio\Projects\Univel_Aplicativo\uPrincipal.pas=C:\Users\Matheus\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024/03/12 19:42:42.000.358,C:\Users\Matheus\Documents\Embarcadero\Studio\Projects\Univel_Aplicativo\pPrincipal.dproj=C:\Users\Matheus\Documents\Embarcadero\Studio\Projects\Project2.dproj</Transaction>
+    <Transaction>2024/03/12 19:47:35.000.402,=C:\Users\Matheus\Documents\Embarcadero\Studio\Projects\Univel_Aplicativo\Unit1.pas</Transaction>
+    <Transaction>2024/03/12 19:49:18.000.372,C:\Users\Matheus\Documents\Embarcadero\Studio\Projects\Univel_Aplicativo\uClientes.pas=C:\Users\Matheus\Documents\Embarcadero\Studio\Projects\Univel_Aplicativo\Unit1.pas</Transaction>
+    <Transaction>2024/03/12 19:49:18.000.372,C:\Users\Matheus\Documents\Embarcadero\Studio\Projects\Univel_Aplicativo\uClientes.fmx=C:\Users\Matheus\Documents\Embarcadero\Studio\Projects\Univel_Aplicativo\Unit1.fmx</Transaction>
+    <Transaction>2024/05/06 21:23:19.000.585,=C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas\Unit1.pas</Transaction>
+    <Transaction>2024/05/06 21:24:56.000.498,C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas\Unit1.fmx=C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas\uPedidos.fmx</Transaction>
+    <Transaction>2024/05/06 21:24:56.000.498,C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas\Unit1.pas=C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas\uPedidos.pas</Transaction>
+    <Transaction>2024/05/14 16:02:36.000.842,=C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas - Copia\Unit1.pas</Transaction>
+    <Transaction>2024/05/14 16:04:23.000.080,C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas - Copia\uDM.pas=C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas - Copia\Unit1.pas</Transaction>
+    <Transaction>2024/05/14 16:04:23.000.080,C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas - Copia\uDM.dfm=C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas - Copia\Unit1.dfm</Transaction>
+    <Transaction>2024/05/20 11:41:46.000.498,=C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas - Copia\Unit1.pas</Transaction>
+    <Transaction>2024/05/20 11:42:20.000.981,=C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas - Copia\Unit1.pas</Transaction>
+    <Transaction>2024/05/20 11:45:51.000.957,C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas - Copia\uProdutosFrame.pas=C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas - Copia\Unit1.pas</Transaction>
+    <Transaction>2024/05/20 11:45:51.000.957,C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas - Copia\uProdutosFrame.fmx=C:\Users\Matheus\Documents\GitHub\Projeto Forca de vendas (delphi)\P_Forca_de_Vendas - Copia\Unit1.fmx</Transaction>
+    <Transaction>2024/06/09 16:23:18.000.400,=C:\Users\Luiz Felipe\Desktop\P_Forca_de_Vendas-main\Unit1.pas</Transaction>
+    <Transaction>2024/06/09 16:23:38.000.366,C:\Users\Luiz Felipe\Desktop\P_Forca_de_Vendas-main\uProdutos.pas=C:\Users\Luiz Felipe\Desktop\P_Forca_de_Vendas-main\Unit1.pas</Transaction>
+    <Transaction>2024/06/09 16:23:38.000.366,C:\Users\Luiz Felipe\Desktop\P_Forca_de_Vendas-main\uProdutos.fmx=C:\Users\Luiz Felipe\Desktop\P_Forca_de_Vendas-main\Unit1.fmx</Transaction>
+    <Transaction>2024/06/09 21:45:01.000.275,=C:\Users\Luiz Felipe\Desktop\P_Forca_de_Vendas-main\Unit1.pas</Transaction>
+    <Transaction>2024/06/09 21:45:30.000.904,C:\Users\Luiz Felipe\Desktop\P_Forca_de_Vendas-main\uHome.fmx=C:\Users\Luiz Felipe\Desktop\P_Forca_de_Vendas-main\Unit1.fmx</Transaction>
+    <Transaction>2024/06/09 21:45:30.000.904,C:\Users\Luiz Felipe\Desktop\P_Forca_de_Vendas-main\uHome.pas=C:\Users\Luiz Felipe\Desktop\P_Forca_de_Vendas-main\Unit1.pas</Transaction>
+    <Transaction>2024/06/12 12:17:42.000.360,=C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\Unit1.pas</Transaction>
+    <Transaction>2024/06/12 12:22:35.000.702,C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\Unit1.pas=C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\uCadastro.pas</Transaction>
+    <Transaction>2024/06/12 12:22:35.000.702,C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\Unit1.fmx=C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\uCadastro.fmx</Transaction>
+    <Transaction>2024/06/16 16:36:10.000.692,C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\uInformacoesPedido.fmx=C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\uCadastro.fmx</Transaction>
+    <Transaction>2024/06/16 16:36:10.000.692,C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\uInformacoesPedido.pas=C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\uCadastro.pas</Transaction>
+    <Transaction>2024/06/16 16:36:15.000.741,=C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\uCadastro.pas</Transaction>
+    <Transaction>2024/06/16 19:32:30.000.612,C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\uProdutos.fmx=C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\uFornecedores.fmx</Transaction>
+    <Transaction>2024/06/16 19:32:30.000.612,C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\uProdutos.pas=C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\uFornecedores.pas</Transaction>
+    <Transaction>2024/06/16 19:32:36.000.933,=C:\Users\gmato\OneDrive\Área de Trabalho\SalesFy\uProdutos.pas</Transaction>
+  </Transactions>
+	<ActiveMobileDevice>
+		<NoProfile Android="" Android64=""/>
+	</ActiveMobileDevice>
+</BorlandProject>

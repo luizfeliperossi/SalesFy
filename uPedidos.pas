@@ -155,37 +155,45 @@ implementation
 
 uses uClientes, uProdutosFrame, uInformacoesPedido;
 
-
+// Recebe a qtde desejada e id
 function TFrm_Pedidos.ajustaEstoque(qtde:double;id_produto:integer): double;
 begin
     FDQuery1.Close;
     FDQuery1.SQL.Clear;
+    // SQL consulta de produto via ID
     FDQuery1.SQL.Add('Select * from produtos');
     FDQuery1.SQL.Add('where id = :id_produto');
     FDQuery1.ParamByName('id_produto').AsInteger := id_produto;
     FDQuery1.Open;
 
+    // Verifica se a quantidade é maior que o estoque
     if qtde > FDQuery1.FieldByName('estoque').AsInteger then
       result := FDQuery1.FieldByName('estoque').AsFloat
     else
         result := qtde;
 end;
 
+// Att o estoque pós pedido
 procedure TFrm_Pedidos.atualizaEstoque(id_produto: integer; qtde: double);
 var
+    // Variavel de novo estoque
     t:double;
 begin
     FDQuery1.Close;
     FDQuery1.SQL.Clear;
+    // SQL de consulta via ID
     FDQuery1.SQL.Add('Select * from produtos');
     FDQuery1.SQL.Add('where id = :id_produto');
+    // Define o parametro ID na consulta
     FDQuery1.ParamByName('id_produto').AsInteger := id_produto;
     FDQuery1.Open;
 
     t:=0;
+    // Calcula o novo estoque menos a qtde desejada
     t:=FDQuery1.FieldByName('estoque').AsFloat - qtde;
 
     FDQuery1.SQL.Clear;
+    // SQL de att o estoque
     FDQuery1.SQL.Add('update produtos set');
     FDQuery1.SQL.Add('estoque = :qtde');
 
@@ -224,6 +232,7 @@ begin
 
   while not FDQuery1.Eof do
   begin
+    // Preenche os campos do pedido
     vPedido.id := FDQuery1.FieldByName('id').AsInteger;
     vPedido.data_pedido := FDQuery1.FieldByName('data').AsDateTime;
     vPedido.id_cliente := FDQuery1.FieldByName('ID_CLIENTE').AsInteger;
@@ -231,6 +240,7 @@ begin
     vPedido.id_formapgto := FDQuery1.FieldByName('ID_FORMAPGTO').AsInteger;
     vPedido.forma_pgto := FDQuery1.FieldByName('DESCRICAO').AsString;
     vPedido.valor_total := FDQuery1.FieldByName('valor_total').AsFloat;
+    // Chama função de add na ListView
     inserePedidoNaLista(vPedido);
     FDQuery1.Next;
   end;
@@ -241,15 +251,21 @@ procedure TFrm_Pedidos.inserirItemListBox(id_produto,estoque : integer; nome_pro
 var item : TListBoxItem;
     form : TFrmListaProdutos;
 begin
+  // Cria um novo item na ListBox
   item := TListBoxItem.Create(ListBox1);
   item.Height := 68;
   item.Tag := id_produto;
 
+  // Form associado ao item
   form := TFrmListaProdutos.Create(item);
   form.Align := TAlignLayout.Client;
+
+  // Define os textos do formulario
   form.lblNome.Text := nome_produto;
   form.lblCodigo.Text := IntToStr(id_produto);
   form.lblValor.Text := FloatToStr(valor);
+
+  // Add o formulários na ListBox
   item.AddObject(form);
   ListBox1.AddObject(item);
 end;
@@ -262,12 +278,16 @@ begin
   FDQuery1.Open();
 end;
 
+
 procedure TFrm_Pedidos.atualizarListBox();
 begin
+  // Consulta no BD
   consultarProdutosBanco();
 
+  // Encontra os registros da consulta
   while not FDQuery1.Eof do
   begin
+    // Chama a função e adiciona cada produto na ListBox
     inserirItemListBox(FDQuery1.FieldByName('id').AsInteger,
                       FDQuery1.FieldByName('estoque').AsInteger,
                       FDQuery1.FieldByName('descricao').AsString,
@@ -286,6 +306,7 @@ var
 begin
   totalPedido := 0;
 
+  // Calcula o valor total de cada item
   for i := 0 to Length(vProdutosPedido) - 1 do
   begin
     totalPedido := totalPedido + (vProdutosPedido[i].qtde * vProdutosPedido[i].valorUnit);
@@ -295,9 +316,11 @@ begin
 
   FDQuery1.Close;
   FDQuery1.SQL.Clear;
+  // SQL de inserção no BD
   FDQuery1.SQL.Add('insert into pedido (id, data, id_cliente, valor_total, id_formapgto)');
   FDQuery1.SQL.Add('values (:id, :data, :id_cliente, :valor_total, :id_formapgto)');
 
+  // Define os parametros
   FDQuery1.ParamByName('id').AsInteger := codigo_pedido;
   FDQuery1.ParamByName('data').AsDate := edtDataPedido.Date;
   FDQuery1.ParamByName('id_cliente').AsInteger := idClientePedido;
@@ -306,16 +329,20 @@ begin
 
   FDQuery1.ExecSQL;
 
+  // Parte de inserção de cada item na tabela pedidos_prod
   i := 0;
   while i < Length(vProdutosPedido) do
   begin
+      // Att o estoque do produto
       atualizaEstoque(vProdutosPedido[i].codigo,vProdutosPedido[i].qtde);
 
       codigoItem := geraCodigoItemPedido;
       FDQuery1.SQL.Clear;
+      // SQL de inserção na tabela
       FDQuery1.SQL.Add('insert into pedidos_prod (id, id_produto, valor_unit, qtde, valor_total, id_pedido)');
       FDQuery1.SQL.Add('values (:id, :id_produto, :valor_unit, :qtde, :valor_total, :id_pedido)');
 
+      // Define os parametros
       FDQuery1.ParamByName('id').AsInteger := codigoItem;
       FDQuery1.ParamByName('id_produto').AsInteger := vProdutosPedido[i].codigo;
       FDQuery1.ParamByName('valor_unit').AsFloat := vProdutosPedido[i].valorUnit;
@@ -355,11 +382,15 @@ end;
 procedure TFrm_Pedidos.inserirProdutosnoPedido(id_produto: integer; nome : string; qtde, valorunit : double);
 begin
 
+  // Verifica a qtde para add no pedido
   if qtde > 0 then
+    // Add item na ListView
     with lvProdutosPedido.Items.Add do
     begin
+      // Chama a função p/ verificar e att o estoque
       qtde := ajustaEstoque(qtde,id_produto);
 
+      // Define as informações na ListView
       TListItemText(Objects.FindDrawable('txtCodigo')).Text := IntToStr(id_produto);
       TListItemText(Objects.FindDrawable('txtNome')).Text := nome;
       TListItemText(Objects.FindDrawable('txtValorUnit')).Text := FloatToStr(valorunit);
@@ -367,64 +398,72 @@ begin
     end;
 end;
 
-
 procedure TFrm_Pedidos.ListView1ItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 var
-  id_produto: Integer;
-  vProduto: TProduto;
-  id:integer;
+  id_pedido: Integer;
 begin
+  id_produto := 1;
 
-  id_produto:=1;
-
+  // Verifica se foi clicado em 'imgEditar'
   if (ItemObject.Name = 'imgEditar') then
   begin
+    FDQuery1.Close;
+    FDQuery1.SQL.Clear;
 
-      FDQuery1.Close;
-      FDQuery1.SQL.Clear;
-      FDQuery1.SQL.Add('Select pedido.data,pedido.valor_total,formapgto.descricao from pedido,pedidos_prod,formapgto');
-      FDQuery1.SQL.Add('where pedidos_prod.id_pedido = pedido.id');
-      FDQuery1.SQL.Add('and pedido.id_formapgto = formapgto.id');
-      FDQuery1.SQL.Add('and pedido.ID = :id');
+    // SQL consulta dados do pedido, valor total e descrição da forma de pag
+    FDQuery1.SQL.Add('SELECT pedido.data, pedido.valor_total, formapgto.descricao');
+    FDQuery1.SQL.Add('FROM pedido');
+    FDQuery1.SQL.Add('INNER JOIN pedidos_prod ON pedidos_prod.id_pedido = pedido.id');
+    FDQuery1.SQL.Add('INNER JOIN formapgto ON pedido.id_formapgto = formapgto.id');
+    FDQuery1.SQL.Add('WHERE pedido.id = :id');
 
-      id := StrToInt(TListItemText(ListView1.Items[ItemIndex].Objects.FindDrawable('txtId')).Text);
+    // Pega o ID do pedido via txtId do item selecionado na ListView
+    id_pedido := StrToInt(TListItemText(ListView1.Items[ItemIndex].Objects.FindDrawable('txtId')).Text);
 
-      FDQuery1.ParamByName('id').AsInteger := id;
+    // Define o parâmetro da query com o ID do pedido
+    FDQuery1.ParamByName('id').AsInteger := id_pedido;
+    FDQuery1.Open();
 
-      FDQuery1.Open();
+    // Limpa os campos do formulário
+    frmInfoPedido.edtData.Text := '';
+    frmInfoPedido.edt_formaPagamento.Text := '';
+    frmInfoPedido.edtValorTotal.Text := '';
+    frmInfoPedido.Memo1.Text := '';
 
-      frmInfoPedido.edtData.Text:='';
-      frmInfoPedido.edt_formaPagamento.Text:='';
-      frmInfoPedido.edtValorTotal.Text:='';
-      frmInfoPedido.Memo1.Text:='';
+    // Preenche os campos do formulário com dados do pedido e da forma de pag
+    frmInfoPedido.edtData.Text := FDQuery1.FieldByName('data').AsString;
+    frmInfoPedido.edt_formaPagamento.Text := FDQuery1.FieldByName('descricao').AsString;
+    frmInfoPedido.edtValorTotal.Text := FDQuery1.FieldByName('valor_total').AsString;
 
-      frmInfoPedido.edtData.Text := FDQuery1.FieldByName('data').AsString;
-      frmInfoPedido.edt_formaPagamento.Text := FDQuery1.FieldByName('data').AsString;
-      frmInfoPedido.edtValorTotal.Text := FDQuery1.FieldByName('valor_total').AsString;
+    // SQL buscar os produtos associados ao pedido
+    FDQuery1.SQL.Clear;
+    FDQuery1.SQL.Add('SELECT produtos.DESCRICAO, PEDIDOS_PROD.QTDE, PEDIDOS_PROD.VALOR_TOTAL');
+    FDQuery1.SQL.Add('FROM pedidos_prod');
+    FDQuery1.SQL.Add('INNER JOIN produtos ON pedidos_prod.id_produto = produtos.id');
+    FDQuery1.SQL.Add('WHERE pedidos_prod.id_pedido = :id');
 
-      FDQuery1.SQL.Clear;
-      FDQuery1.SQL.Add('select produtos.DESCRICAO,PEDIDOS_PROD.QTDE,PEDIDOS_PROD.VALOR_TOTAL from pedidos_prod,produtos');
-      FDQuery1.SQL.Add('where pedidos_prod.id_pedido = :id');
-      FDQuery1.SQL.Add('and pedidos_prod.ID_PRODUTO = produtos.id');
+    // Define o parâmetro da query com o ID do pedido
+    FDQuery1.ParamByName('id').AsInteger := id_pedido;
+    FDQuery1.Open();
 
-      FDQuery1.ParamByName('id').AsInteger := id;
+    // Limpa o conteúdo do Memo1 do formulário frmInfoPedido
+    frmInfoPedido.Memo1.Lines.Clear;
 
-      FDQuery1.Open();
-
-      Frm_Pedidos.Memo1.Text := '';
-
-      while not FDQuery1.Eof do
-      begin
-        frmInfoPedido.Memo1.Lines.Add(FDQuery1.FieldByName('DESCRICAO').AsString+'/ '+
-                                    FDQuery1.FieldByName('QTDE').AsString+'/ '+
-                                    FDQuery1.FieldByName('VALOR_TOTAL').AsString);
-
-        FDQuery1.Next;
-      end;
-
-      frmInfoPedido.Show;
+    // Preenche o Memo1 com os detalhes de cada produto associado ao pedido
+    while not FDQuery1.Eof do
+    begin
+      frmInfoPedido.Memo1.Lines.Add(
+        FDQuery1.FieldByName('DESCRICAO').AsString + '/ ' +
+        FDQuery1.FieldByName('QTDE').AsString + '/ R$ ' +
+        FDQuery1.FieldByName('VALOR_TOTAL').AsString
+      );
+      FDQuery1.Next;
+    end;
+    
+    // Exibe detalhes do pedido
+    frmInfoPedido.Show;
   end;
 end;
 
@@ -448,18 +487,21 @@ begin
   //{$ENDIF}
 end;
 
-procedure TFrm_Pedidos.inserirProdutonoVetor(produto : TProduto);
-var i : integer;
-    achou : boolean;
+procedure TFrm_Pedidos.inserirProdutonoVetor(produto: TProduto);
+var
+  i: Integer;
+  achou: Boolean;
 begin
-
   i := 0;
-  achou := false;
+  achou := False;
 
+  // Verifica se o vetor vProdutosPedido está vazio
   if Length(vProdutosPedido) = 0 then
   begin
+    // Se estiver vazio, adiciona o primeiro elemento ao vetor
     SetLength(vProdutosPedido, Length(vProdutosPedido) + 1);
 
+    // Preenche os campos do primeiro elemento do vetor
     vProdutosPedido[Length(vProdutosPedido) - 1].codigo := produto.codigo;
     vProdutosPedido[Length(vProdutosPedido) - 1].nome := produto.nome;
     vProdutosPedido[Length(vProdutosPedido) - 1].qtde := produto.qtde;
@@ -468,26 +510,28 @@ begin
   end
   else
   begin
-
+    // Se o vetor não estiver vazio, procura pelo produto no vetor
     while i < Length(vProdutosPedido) do
     begin
-
       if vProdutosPedido[i].codigo = produto.codigo then
       begin
+        // Se o produto já existe no vetor, atualiza seus dados
         vProdutosPedido[i].codigo := produto.codigo;
         vProdutosPedido[i].nome := produto.nome;
         vProdutosPedido[i].qtde := produto.qtde;
         vProdutosPedido[i].valorUnit := produto.valorUnit;
         vProdutosPedido[i].vTotal := produto.qtde * produto.valorUnit;
-        achou := true;
+        achou := True; // Indica que o produto foi encontrado no vetor
       end;
-      inc(i);
+      Inc(i);
     end;
 
+    // Se o produto não foi encontrado no vetor, ADD ao final do vetor
     if not achou then
     begin
       SetLength(vProdutosPedido, Length(vProdutosPedido) + 1);
 
+      // Preenche os campos do novo elemento adicionado ao vetor
       vProdutosPedido[Length(vProdutosPedido) - 1].codigo := produto.codigo;
       vProdutosPedido[Length(vProdutosPedido) - 1].nome := produto.nome;
       vProdutosPedido[Length(vProdutosPedido) - 1].qtde := produto.qtde;
@@ -495,45 +539,54 @@ begin
       vProdutosPedido[Length(vProdutosPedido) - 1].vTotal := produto.qtde * produto.valorUnit;
     end;
   end;
-
 end;
-
 
 procedure TFrm_Pedidos.FormShow(Sender: TObject);
 begin
+  // Define o índice inicial da TabControl ao mostrar o formulário
   TabControl1.TabIndex := 0;
+  
+  // Define a data atual nos componentes edt_data e edtDataPedido
   edt_data.Date := Date;
   edtDataPedido.Date := Date;
 end;
 
 function TFrm_Pedidos.geraCodigoItemPedido: integer;
 begin
-    FDQuery1.SQL.Clear ;
-    FDQuery1.SQL.Add('Select max(id) as m from pedidos_prod');
-    FDQuery1.Open();
+  // SQL consultar o maior ID da tabela
+  FDQuery1.SQL.Clear;
+  FDQuery1.SQL.Add('SELECT MAX(id) AS m FROM pedidos_prod');
+  FDQuery1.Open();
 
-    if FDQuery1.FieldByName('m').AsString = '' then
-    begin
-        result := 1;
-        exit;
-    end;
+  // Verifica se o campo 'm' retornado é vazio
+  if FDQuery1.FieldByName('m').IsNull then
+  begin
+    // Caso não haja registros na tabela, retorna o primeiro código possível (1)
+    Result := 1;
+    Exit;
+  end;
 
-    result := FDQuery1.FieldByName('m').AsInteger+1;
+  // Caso haja registros na tabela, retorna o próximo código disponível
+  Result := FDQuery1.FieldByName('m').AsInteger + 1;
 end;
 
 function TFrm_Pedidos.geraCodigoPedido: integer;
 begin
-    FDQuery1.SQL.Clear;
-    FDQuery1.SQL.Add('Select max(id) as m from pedido');
-    FDQuery1.Open();
+  // Limpa a SQL da FDQuery1 e define a consulta para obter o maior ID da tabela pedido
+  FDQuery1.SQL.Clear;
+  FDQuery1.SQL.Add('SELECT MAX(id) AS m FROM pedido');
+  FDQuery1.Open();
 
-    if FDQuery1.FieldByName('m').AsString = '' then
-    begin
-        result := 1;
-        exit;
-    end;
+  // Verifica se o campo 'm' retornado é vazio
+  if FDQuery1.FieldByName('m').IsNull then
+  begin
+    // Caso não haja registros na tabela, retorna o primeiro código possível (1)
+    Result := 1;
+    Exit;
+  end;
 
-    result := FDQuery1.FieldByName('m').AsInteger+1;
+  // Caso haja registros na tabela, retorna o próximo código disponível
+  Result := FDQuery1.FieldByName('m').AsInteger + 1;
 end;
 
 procedure TFrm_Pedidos.Image4Click(Sender: TObject);
@@ -568,8 +621,9 @@ end;
 
 procedure TFrm_Pedidos.inserePedidoNaLista(pedido: TPedido);
 begin
-  with ListView1.Items.Add do
+  with ListView1.Items.Add do // Add na ListView
   begin
+    // Define as info na ListView
     TListItemText(Objects.FindDrawable('txtId')).Text := IntToStr(pedido.id);
     TListItemText(Objects.FindDrawable('txtNome')).Text := pedido.nome_cliente;
     TListItemText(Objects.FindDrawable('txtData')).Text := DateToStr(pedido.data_pedido);
@@ -581,7 +635,7 @@ end;
 
 procedure TFrm_Pedidos.SpeedButton2Click(Sender: TObject);
 begin
-  if not Assigned(frmClientes) then
+  if not Assigned(frmClientes) then // Verifica se o form não foi criado
   frmClientes := TfrmClientes.Create(self);
   frmClientes.atravesPedido := true;
   frmClientes.ShowModal;
